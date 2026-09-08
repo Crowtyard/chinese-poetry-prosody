@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "name": "十三辙（现代听感通押辙口）",
+    "basis": "北方曲艺/戏曲唱词通行的十三道大辙（发花、梭波、乜斜、一七、姑苏、怀来、灰堆、遥条、由求、言前、人辰、江阳、中东）",
+    "scope": "本项目 MODERN_EAR 听感模式以十三辙为 PERFECT_RHYME 判定线，另加显式 NEAR 启发式。",
+    "note": "辙与韵母对应以 prosody_core.py Z13 为准；本文件为可读元数据。"
+  },
+  "groups": [
+    {"no": "发花", "finals": ["a", "ia", "ua"], "examples": ["妈", "家", "花", "沙"]},
+    {"no": "梭波", "finals": ["o", "e", "uo"], "examples": ["波", "歌", "多", "河"]},
+    {"no": "乜斜", "finals": ["ie", "üe"], "examples": ["街", "月", "雪", "别"]},
+    {"no": "一七", "finals": ["i", "i_apical", "ü", "er"], "examples": ["衣", "知", "鱼", "儿"]},
+    {"no": "姑苏", "finals": ["u"], "examples": ["姑", "湖", "路", "孤"]},
+    {"no": "怀来", "finals": ["ai", "uai"], "examples": ["开", "来", "外", "快"]},
+    {"no": "灰堆", "finals": ["ei", "uei"], "examples": ["杯", "飞", "归", "回"]},
+    {"no": "遥条", "finals": ["ao", "iao"], "examples": ["高", "桥", "遥", "晓"]},
+    {"no": "由求", "finals": ["ou", "iou"], "examples": ["楼", "舟", "秋", "流"]},
+    {"no": "言前", "finals": ["an", "ian", "uan", "üan"], "examples": ["山", "天", "关", "圆"]},
+    {"no": "人辰", "finals": ["en", "in", "uen", "ün"], "examples": ["门", "心", "春", "云"]},
+    {"no": "江阳", "finals": ["ang", "iang", "uang"], "examples": ["长", "江", "窗", "霜"]},
+    {"no": "中东", "finals": ["eng", "ing", "ong", "iong", "ueng"], "examples": ["声", "明", "东", "空"]}
+  ]
+}

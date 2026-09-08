@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 临时与日志
+*.tmp
+*.log
+*.rar
+
+# 本机路径泄漏防护
+# （发布仓库不含任何归档/备份目录；历史版本由 Git 记录）

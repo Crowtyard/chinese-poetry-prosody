@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "name": "中华新韵·十四韵（简表）",
+    "basis": "中华诗词学会 2005 年试行《中华新韵(十四韵)常用字简表》",
+    "scope": "十四韵系对十八韵的合并：二波/三歌合并、六儿/七齐/十一鱼合并、十七庚/十八东合并。",
+    "note": "韵部与韵母对应以 prosody_core.py F14 为准；本文件为可读元数据。"
+  },
+  "groups": [
+    {"no": "一麻", "finals": ["a", "ia", "ua"], "examples": ["妈", "家", "花", "沙"]},
+    {"no": "二波", "finals": ["o", "e", "uo"], "examples": ["波", "歌", "多", "河"]},
+    {"no": "三皆", "finals": ["ie", "üe"], "examples": ["街", "月", "雪", "别"]},
+    {"no": "四开", "finals": ["ai", "uai"], "examples": ["开", "来", "外", "快"]},
+    {"no": "五微", "finals": ["ei", "uei"], "examples": ["杯", "飞", "归", "回"]},
+    {"no": "六豪", "finals": ["ao", "iao"], "examples": ["高", "桥", "遥", "晓"]},
+    {"no": "七尤", "finals": ["ou", "iou"], "examples": ["楼", "舟", "秋", "流"]},
+    {"no": "八寒", "finals": ["an", "ian", "uan", "üan"], "examples": ["山", "天", "关", "圆"]},
+    {"no": "九文", "finals": ["en", "in", "uen", "ün"], "examples": ["门", "心", "春", "云"]},
+    {"no": "十唐", "finals": ["ang", "iang", "uang"], "examples": ["长", "江", "窗", "霜"]},
+    {"no": "十一庚", "finals": ["eng", "ing", "ong", "iong", "ueng"], "examples": ["声", "明", "东", "空"]},
+    {"no": "十二齐", "finals": ["i", "er", "ü"], "examples": ["衣", "儿", "鱼", "离"]},
+    {"no": "十三支", "finals": ["i_apical"], "examples": ["知", "诗", "时", "字"]},
+    {"no": "十四姑", "finals": ["u"], "examples": ["姑", "湖", "路", "孤"]}
+  ]
+}
