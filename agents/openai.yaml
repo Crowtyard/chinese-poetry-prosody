@@ -1,0 +1,4 @@
+interface:
+  display_name: "中文诗律"
+  short_description: "五绝七绝的平仄、押韵、粘对与韵部检查"
+  default_prompt: "使用 chinese-poetry-prosody 对中文五绝或七绝进行确定性的拼音、平仄、押韵、相对、相粘和韵部检查，并根据脚本报告解释结果。"
