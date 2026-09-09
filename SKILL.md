@@ -1,8 +1,8 @@
 ---
-id: chinese-poetry-prosody
-name: Chinese poetry prosody checker (中文诗律)
-version: 1.1.0
-description: 中文格律诗（五绝/七绝）的确定性规则验证工具。负责拼音、声调、简化平仄、现代韵（中华新韵十八韵/十四韵、十三辙、听感近韵）、联内相对、联间相粘、韵脚与整诗扫描；所有底层判定由数据+程序计算并以结构化状态输出，LLM 只解释结果并修改诗句。v1.1-rc2：strict profile 真正严格（十三辙/听感仅作辅助提示不改变判定）、首句入韵与正文共用同一判定入口、无字符串反推状态、override 越界/非法显式诊断（POSITION_OVERRIDE_OUT_OF_RANGE / INVALID_READING_OVERRIDE）。诗人创作后请用它复查格律；处理诗歌声韵问题、判定是否出韵/失粘/失对、查字音韵部时使用。
+name: chinese-poetry-prosody
+description: 中文格律诗（五绝/七绝）的确定性规则验证工具。负责拼音、声调、简化平仄、现代韵（中华新韵十八韵/十四韵、十三辙、听感近韵）、联内相对、联间相粘、韵脚与整诗扫描；所有底层判定由数据+程序计算并以结构化状态输出，LLM 只解释结果并修改诗句。诗人创作后用于复查格律；处理诗歌声韵问题、判定是否出韵/失粘/失对、查字音韵部时使用。
+metadata:
+  version: "1.1.0"
 ---
 
 # 中文诗律 Skill（chinese-poetry-prosody）v1.1.0 Final
@@ -38,7 +38,7 @@ description: 中文格律诗（五绝/七绝）的确定性规则验证工具。
 
 ## 命令速查
 
-所有命令在 Skill 根目录（`~/.kun/skills/chinese-poetry-prosody/`）下执行：
+所有命令在 Skill 根目录下执行：
 
 ```bash
 # 1) 单字音韵查询（候选读音全部列出；默认读音标注 DEFAULT_SOURCE=dictionary_order）
