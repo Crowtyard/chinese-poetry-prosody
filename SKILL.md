@@ -1,11 +1,23 @@
 ---
 name: chinese-poetry-prosody
-description: 中文格律诗（五绝/七绝）的确定性规则验证工具。负责拼音、声调、简化平仄、现代韵（中华新韵十八韵/十四韵、十三辙、听感近韵）、联内相对、联间相粘、韵脚与整诗扫描；所有底层判定由数据+程序计算并以结构化状态输出，LLM 只解释结果并修改诗句。诗人创作后用于复查格律；处理诗歌声韵问题、判定是否出韵/失粘/失对、查字音韵部时使用。
+description: 中文诗律验证工具。原生确定性检查现代普通话五绝/七绝的拼音、平仄、押韵、相对与相粘；可选独立后端查询平水韵、词林正韵和词牌变体，提供须复核的词稿匹配报告。传统外部结果不认证整诗合律，LLM 不猜判字音或韵部。
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
-# 中文诗律 Skill（chinese-poetry-prosody）v1.1.0 Final
+# 中文诗律 Skill（chinese-poetry-prosody）v1.2.0
+
+## 先选规则与验收范围
+
+- 现代普通话五绝/七绝：使用原生 `check_poem.py`，默认 `xinyun18`，保留现有行为。
+- 平水韵、词林正韵查字与词谱查询：使用可选 `traditional_prosody.py`，先读
+  [传统后端接入](references/traditional_backend.md)，明确韵书、词牌及确切变体。
+- 传统词稿匹配是外部参考报告，始终 WARN / EXTERNAL_REVIEW_REQUIRED；不把进程成功、
+  匹配分数或多音候选命中解释为全面合律 PASS。缺字、词谱或后端问题不得通过猜读解决。
+- 尚未提供传统绝句、律诗的全面整诗验收；对仗、拗救等不在新增接口认证范围。
+- 自由诗不套绝句检查；古人作品不套现代声调规则。声明本次结论的体系和实际检查范围。
+
+以下原生流程与 PASS/WARN/FAIL 契约只针对现代简化引擎。
 
 ## 定位与职责边界（本 Skill 最重要的一页）
 
@@ -115,7 +127,7 @@ py tests/test_v1_1_suite.py               # V1.1 四层套件（56 个，含全�
 
 ```
 chinese-poetry-prosody/
-├── SKILL.md                # 本文件（v1.1.0）
+├── SKILL.md                # 本文件（v1.2.0）
 ├── references/
 │   ├── modern_rhyme.md     # 现代韵：profiles、韵书版本差异、NEAR 白名单
 │   ├── pingze.md           # 简化平仄 + 与传统近体规则区分 + 轻声规则 + 多音字策略

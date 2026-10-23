@@ -9,12 +9,25 @@
 | 汉字读音表 data/chars.json | 由 pypinyin 0.55.0 生成（mozillazg/python-pinyin） | **MIT** | 生成离线 JSON（scripts/build_char_table.py 一次性构建，构建时间记录在 chars.json meta 中）；运行时不再依赖 pypinyin |
 | 韵部/辙口划分表 | 中华新韵·十八韵（1941 教育部公布，分部与《诗韵新编》一致）、中华新韵·十四韵（中华诗词学会 2005 试行简表）、十三辙（北方曲艺通押辙口） | 公共韵书/通行规则（事实性数据） | 自行整理为 data/*.json 与 prosody_core.py 中 F18/F14/Z13 表 |
 
-## 参考项目（仅借鉴思想，未复制代码/数据）
+## 参考项目与可选独立后端（仓库未复制代码/数据）
 
 | 项目 | 许可证 | 借鉴内容 | 未采用的原因 |
 |---|---|---|---|
 | wb14123/rhyme-checker（Rust CLI + Claude Skill，支持平水韵/词林正韵/中华新韵/词牌格律） | **GPL-3.0** | ① "SKILL.md 薄包装 + 外部确定性 CLI"的分工模式（LLM 不当检测器）；② 韵部↔字双索引的数据组织思想；③ 多韵书参数切换设计 | rhyme-checker 采用 GPL-3.0。为避免在本项目的分发与衍生实现中引入 GPL-3.0 所附带的许可义务，本项目未复制其代码或数据，仅参考其架构与设计思想（其韵部数据 README 注明源自 charlesix59/chinese_word_rhyme，未核验许可，亦未采用） |
 | Wscats/poetry-skills（Prompt-based 诗词生成/查询 Skill，MIT，数据为 chinese-poetry 语料约 291MB + strains 平仄标注） | **MIT** | ① SKILL.md front matter 的 activation trigger 写法（但其为 Claude 规范，本项目遵循本机 Kun Skill 规范：id/name/description）；② 认识到"strains 语料 + LLM 参考"模式 | 其格律判断最终仍由 LLM 完成（与"LLM 不当检测器"原则冲突）；291MB 语料对"规则验证"不是必需品；V1 不需要语料检索能力 |
+
+### v1.2：通过独立进程使用 rhyme-checker
+
+新增可选接口并不将上游代码、字表或词谱放入本仓库。安装器固定上游提交
+`388e6a6c1e6783a787a65338ef1584473884c59f`，安装在仓库之外，保留其源码、GPL-3.0
+许可证与锁文件；接口只调用 CLI 并解析查询报告，原生现代数据与引擎保持独立。
+原表记录的是 V1 的选型背景，不再意味着当前版本完全不调用外部程序。
+
+上游 `data/rhyme/readme.md` 指向 `charlesix59/chinese_word_rhyme`；
+`data/cipai/readme.md` 指向 `wmjordan/longyusheng.org` 的词谱 XML。
+这些数据的准确性及再分发许可未在本项目中全面审核，故未将其导入或重新发布为本项目数据。
+外部报告可能有缺字、词谱/用韵差异，详见 `traditional_backend.md` 的实际验证记录。
+字表候选与匹配分数不等于语境读音正确或传统整诗合律；保留复核状态。
 
 ## 决策：为什么 V1 采用"自有 Python 引擎 + 离线数据"
 

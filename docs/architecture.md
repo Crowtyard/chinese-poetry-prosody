@@ -2,6 +2,18 @@
 
 中文诗律 Skill 的架构说明。
 
+## v1.2 可选传统接口
+
+原生现代引擎和离线数据链保持独立。新增 `scripts/traditional_prosody.py` 通过
+独立进程调用另行安装的 `rhyme-checker`，提供传统查字、韵部候选交集、确切词牌/变体查询，
+以及词稿匹配的复核报告。`install_traditional_backend.py` 在仓库外固定版本构建并保留上游许可。
+
+该 CLI 的零退出码仅证明运行完成，无法证明格律通过；词牌查询还存在模糊匹配。
+因此桥接层对查询名称与变体做精确筛选，对缺字显式报告；词稿匹配始终返回
+`WARN / EXTERNAL_REVIEW_REQUIRED`，不从人类文案反推原生 PASS/FAIL。
+查询协议变动、未知字和未安装后端均保持 UNCERTAIN，不静默回退现代引擎。
+详见 `references/traditional_backend.md`。传统对仗、拗救与全面整诗验收尚未实现。
+
 ## 总则：创作与验证分离
 
 ```
