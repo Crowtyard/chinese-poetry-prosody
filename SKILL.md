@@ -2,10 +2,10 @@
 name: chinese-poetry-prosody
 description: 中文诗律验证工具。原生确定性检查现代普通话五绝/七绝的拼音、平仄、押韵、相对与相粘；可选独立后端查询平水韵、词林正韵和词牌变体，提供须复核的词稿匹配报告。传统外部结果不认证整诗合律，LLM 不猜判字音或韵部。
 metadata:
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
-# 中文诗律 Skill（chinese-poetry-prosody）v1.2.0
+# 中文诗律 Skill（chinese-poetry-prosody）v1.2.1
 
 ## 先选规则与验收范围
 
@@ -127,7 +127,7 @@ py tests/test_v1_1_suite.py               # V1.1 四层套件（56 个，含全�
 
 ```
 chinese-poetry-prosody/
-├── SKILL.md                # 本文件（v1.2.0）
+├── SKILL.md                # 本文件（v1.2.1）
 ├── references/
 │   ├── modern_rhyme.md     # 现代韵：profiles、韵书版本差异、NEAR 白名单
 │   ├── pingze.md           # 简化平仄 + 与传统近体规则区分 + 轻声规则 + 多音字策略
