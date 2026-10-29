@@ -25,6 +25,23 @@ def args_for(*argv):
 
 
 class TestBoundaryContract(unittest.TestCase):
+    def test_missing_title_and_missing_variant_have_distinct_diagnostics(self):
+        backend = bridge.Backend("unused", "cilin")
+        for command in ("cipai", "check-ci"):
+            for exists in (True, False):
+                with self.subTest(command=command, title_exists=exists):
+                    argv = (["cipai", "测试词牌", "--variant", "未知变体"] if command == "cipai" else
+                            ["check-ci", "--ci-pai", "测试词牌", "--variant", "未知变体", "--poem", "测试"])
+                    with patch.object(backend, "run", return_value=PATTERN if exists else "未找到词牌: 测试词牌") as call:
+                        report = bridge.make_report(args_for(*argv), backend)
+                    self.assertEqual(report["code"], "VARIANT_NOT_FOUND" if exists else "CIPAI_NOT_FOUND")
+                    self.assertEqual(report["requested_name"], "测试词牌")
+                    self.assertEqual(report["requested_variant"], "未知变体")
+                    self.assertEqual(report["available_variants"], ["定格"] if exists else [])
+                    self.assertNotIn("selected_pattern", report)
+                    self.assertEqual(call.call_count, 1)  # no match-ci-pai call
+                    self.assertNotIn("--variant", call.call_args.args)
+
     def test_exit_zero_with_match_score_one_still_requires_review(self):
         backend = bridge.Backend("unused", "cilin")
         def run(*argv):
@@ -134,6 +151,16 @@ except bridge.BackendError:
 
 @unittest.skipUnless(LIVE_BACKEND, "optional external backend is not installed")
 class TestLiveTraditionalBackend(unittest.TestCase):
+    def test_real_unknown_title_and_variant_are_distinguished(self):
+        backend = bridge.Backend(LIVE_BACKEND, "cilin")
+        for name, variant, expected in [("不存在的词牌987654321", None, "CIPAI_NOT_FOUND"),
+                                        ("如梦令", "不存在的变体987654321", "VARIANT_NOT_FOUND")]:
+            argv = ["cipai", name] + (["--variant", variant] if variant else [])
+            report = bridge.make_report(args_for(*argv), backend)
+            self.assertEqual(report["code"], expected)
+            self.assertEqual(report["variants"], [])
+            self.assertEqual(report["status"], "UNCERTAIN")
+
     def test_historical_entering_tone_and_rhyme_differ_from_modern(self):
         backend = bridge.Backend(LIVE_BACKEND, "pingshui")
         readings = backend.char("白")["memberships"]

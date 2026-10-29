@@ -66,6 +66,9 @@ python3 scripts/traditional_prosody.py --dict cilin --json check-ci \
 - 查字/词谱 `status=OK`、exit 0 只代表查询完成，不表示诗词合律。
 - `SHARED_MEMBERSHIP` 只表示两个字有同名、同声类韵部候选，不保证当前语义下可以通押。
 - 缺字、未找到确切词牌/变体、未安装后端、超时或接口不兼容 → `UNCERTAIN`、exit 1。
+- 词牌查询先取得全部同名资料，再精确筛选变体。`CIPAI_NOT_FOUND` 表示未找到确切词牌；
+  `VARIANT_NOT_FOUND` 表示词牌存在而指定变体不存在，保留 `requested_name`、
+  `requested_variant` 与 `available_variants`。两种情况都拒绝替代；后者的原始输出是该词牌的全变体证据。
 - `check-ci` 始终 `verdict=WARN`、`relation=EXTERNAL_REVIEW_REQUIRED`、exit 1。
   外部运行成功或匹配分数 1，都不能转换成原生引擎的 PASS。
 - 安装/参数错误不应当被解读成诗稿的审美或格律缺陷。

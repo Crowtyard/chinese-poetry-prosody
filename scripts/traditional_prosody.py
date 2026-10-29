@@ -117,15 +117,27 @@ def parse_cipai(output):
 
 
 def query_cipai(backend, name, variant=None):
-    args = ["query-ci-pai", "--ci-pai", name]
-    if variant:
-        args += ["--variant", variant]
-    output = backend.run(*args)
+    # Fetch the title before filtering variants: upstream mislabels an unknown
+    # variant as a missing title. Keep its full evidence and diagnose locally.
+    output = backend.run("query-ci-pai", "--ci-pai", name)
     # Upstream uses substring matching. Do not silently select another title.
     matches = [v for v in parse_cipai(output)
                if name in [v["name"], *v["aliases"]]
                and (variant is None or variant == v["variant"])]
     return matches, output
+
+
+def pattern_diagnostic(name, variant, matches, output):
+    available = [v for v in parse_cipai(output) if name in [v["name"], *v["aliases"]]]
+    result = {"requested_name": name, "requested_variant": variant,
+              "available_variants": list(dict.fromkeys(v["variant"] for v in available))}
+    if not available:
+        result.update(code="CIPAI_NOT_FOUND", note=f"未找到确切词牌：{name}；未使用近似名称代替。")
+    elif not matches:
+        result.update(code="VARIANT_NOT_FOUND", note=f"词牌 {name} 存在，但未找到请求的变体：{variant}；未自动替换。")
+    elif variant is not None and len(matches) != 1:
+        result.update(code="VARIANT_AMBIGUOUS", note="未找到唯一的确切变体；未执行匹配。")
+    return result
 
 
 def make_report(args, backend):
@@ -155,14 +167,15 @@ def make_report(args, backend):
     elif args.command == "cipai":
         matches, output = query_cipai(backend, args.name, args.variant)
         report.update(variants=matches, raw_output=output)
+        report.update(pattern_diagnostic(args.name, args.variant, matches, output))
         if not matches:
             report["status"] = "UNCERTAIN"
     elif args.command == "check-ci":
         matches, output = query_cipai(backend, args.ci_pai, args.variant)
         report.update(scope="external_ci_review", status="UNCERTAIN", verdict="WARN",
                       relation="EXTERNAL_REVIEW_REQUIRED", pattern_output=output)
+        report.update(pattern_diagnostic(args.ci_pai, args.variant, matches, output))
         if len(matches) != 1:
-            report["note"] = "未找到唯一的确切词牌和变体；未执行匹配，不使用近似名称代替。"
             return report
         report["selected_pattern"] = matches[0]
         # Missing entries must not be mistaken for wrong historical tones.
