@@ -186,10 +186,22 @@ def make_report(args, backend):
         report["raw_output"] = backend.run(
             "match-ci-pai", "--ci-pai", args.ci_pai, "--variant", args.variant, "--", args.poem,
         )
+        # Classify reported marks, not historical correctness. In particular a
+        # missing entry must not be relabelled as an established tone mistake.
+        marks = list(dict.fromkeys(re.findall(r"(.)（平仄错）", report["raw_output"])))
+        missing = set(report["missing_characters"])
+        multiple = {x["char"] for x in report["multiple_memberships"]}
+        report["review_findings"] = {
+            "coverage_missing": report["missing_characters"],
+            "multiple_candidates": sorted(multiple),
+            "reported_tone_marks": marks,
+            "pattern_tone_questions": [c for c in marks if c not in missing | multiple],
+        }
         report["note"] = (
             "外部报告仅供复核：匹配分数、无错误标记或 exit 0 均不自动等于合律。"
             "先核对缺字、多音语义、词谱变体与典籍；不得因上游提示直接修改古人作品。"
             "本接口不作传统整诗 PASS 认证，也不检查审美、对仗或拗救。"
+            "review_findings 分开列字表覆盖、多候选与其余谱式声调疑点；原始标错仅是待核线索。"
         )
     return report
 
@@ -239,6 +251,8 @@ def main(argv=None):
             print(f"候选关系：{report['relation']}；同部候选：{report['shared_memberships']}")
         if report.get("missing_characters"):
             print("外部字表缺字：" + "、".join(report["missing_characters"]))
+        if report.get("review_findings", {}).get("pattern_tone_questions"):
+            print("需核对谱式的声调疑点（非已确认用字错误）：" + "、".join(report["review_findings"]["pattern_tone_questions"]))
         if report.get("multiple_memberships"):
             print("需按语境核对多候选：" + "、".join(x["char"] for x in report["multiple_memberships"]))
         print(report.get("note") or report.get("message") or "查询完成；这不是整诗合律结论。")

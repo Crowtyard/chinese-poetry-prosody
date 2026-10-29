@@ -64,6 +64,8 @@ class TestBoundaryContract(unittest.TestCase):
                                                 "--variant", "定格", "--poem", "测试"), backend)
         self.assertEqual(report["missing_characters"], ["测", "试"])
         self.assertEqual(report["verdict"], "WARN")
+        self.assertEqual(report["review_findings"]["coverage_missing"], ["测", "试"])
+        self.assertEqual(report["review_findings"]["pattern_tone_questions"], [])
 
     def test_substring_title_is_not_silently_accepted(self):
         backend = bridge.Backend("unused", "cilin")
@@ -151,6 +153,22 @@ except bridge.BackendError:
 
 @unittest.skipUnless(LIVE_BACKEND, "optional external backend is not installed")
 class TestLiveTraditionalBackend(unittest.TestCase):
+    def test_missing_entries_do_not_inherit_shen_readings(self):
+        backend = bridge.Backend(LIVE_BACKEND, "cilin")
+        for char in ("她", "沉"):
+            self.assertEqual(backend.char(char)["memberships"], [])
+        self.assertEqual({m["tone"] for m in backend.char("沈")["memberships"]}, {"平", "仄"})
+
+    def test_classical_tone_marks_are_separated_from_missing_entries(self):
+        poem = "常记溪亭日暮，沉醉不知归路。兴尽晚回舟，误入藕花深处。争渡，争渡，惊起一滩鸥鹭。"
+        backend = bridge.Backend(LIVE_BACKEND, "cilin")
+        report = bridge.make_report(args_for("check-ci", "--ci-pai", "如梦令", "--variant", "定格", "--poem", poem), backend)
+        self.assertEqual(report["review_findings"]["coverage_missing"], ["沉"])
+        self.assertEqual(report["review_findings"]["pattern_tone_questions"], ["日"])
+        self.assertIn("沉（平仄错）", report["raw_output"])  # retained evidence, not our verdict
+        self.assertNotIn("沈", report["raw_output"])  # no rewrite to fit dictionary
+        self.assertEqual(report["verdict"], "WARN")
+
     def test_real_unknown_title_and_variant_are_distinguished(self):
         backend = bridge.Backend(LIVE_BACKEND, "cilin")
         for name, variant, expected in [("不存在的词牌987654321", None, "CIPAI_NOT_FOUND"),
